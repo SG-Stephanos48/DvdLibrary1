@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>DvdLibrary</title>
+        <!-- Bootstrap core CSS -->
+        <link href="css/bootstrap.css"
+              rel="stylesheet"> 
+    </head>
+    <body>
+        <div class="container">
+			<h1></h1>
+            <div class="row" id="navDiv">
+				<form class="form" role="form" id="search-form">
+				<div class="col-md-2">
+					<button type="button" id="create" onclick="showCreateForm()" class="btn btn-default">Create Dvd</button>
+				</div>
+				<div class="col-md-1">
+				</div>
+
+				<div class="col-md-1">
+					<button type="button" id="search-button" class="btn btn-default">Search</button>
+				</div>
+				
+				<div class="form-group">
+					<div class="col-md-2">
+						<select class="form-control" id="search-category" name="Category" required>
+							<option value="">- Search Category -</option>
+							<option value="title">Title</option>
+							<option value="year">Release Year</option>
+							<option value="director">Director Name</option>
+							<option value="rating">Rating</option>
+						</select>					
+					</div>
+
+				</div>
+				
+				<div class="form-group">
+					<div class="col-md-2">
+						<input type="text"
+							   class="form-control"
+							   id="search-term"
+							   placeholder="Search Term" required />
+					</div>
+				</div>
+				</form>
+			</div>
+            <hr/>
+			<ul class="list-group" id="errorMessages"></ul>
+			<div class="row">
+				<div id="dvdTableDiv">
+					<table id="dvdLibraryTable" class="table table-hover table-bordered">
+						<tr>
+							<th width="25%">Title</th>
+							<th width="25%">Release Date</th>
+							<th width="15%">Director</th>
+							<th width="15%">Rating</th>
+							<th width="20%"></th>
+						</tr>
+						<!--
+						 #3: This holds the list of contacts - we will add rows
+						dynamically
+						 using jQuery
+						 -->
+						<tbody id="contentRows"></tbody>
+						<tbody id="contentRowsSearch"></tbody>
+					</table>
+				</div>
+
+				<div id="editFormDiv" style="display: none">
+					<h2>Edit Dvd</h2>
+
+					<form class="form-horizontal" role="form" id="edit-form">
+						<div class="form-group">
+							<label for="edit-title" class="col-md-2 control-label">
+								Dvd Title:
+							</label>
+							
+							<div class="col-md-4">
+								<input type="text"
+									   class="form-control"
+									   id="edit-title"
+									   placeholder="Dvd Title" required />
+							</div>	
+							
+							<div class="col-md-6">
+							</div>
+						</div>
+						
+						<div class="form-group">
+							<label for="edit-realeaseYear" class="col-md-2 control-label">
+								Release Year:
+							</label>
+							
+							<div class="col-md-4">
+								<input type="text"
+									   class="form-control"
+									   id="edit-realeaseYear"
+									   placeholder="Release Year" digits maxlength="4" />
+							</div>	
+							
+							<div class="col-md-6">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="edit-director" class="col-md-2 control-label">
+								Director:
+							</label>
+							
+							<div class="col-md-4">
+								<input type="text"
+									   class="form-control"
+									   id="edit-director"
+									   placeholder="Director" />
+							</div>	
+							
+							<div class="col-md-6">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="edit-rating" class="col-md-2 control-label">Rating:</label>
+							<div class="col-md-4">
+								<select class="form-control" id="edit-rating" name="Rating">
+									<option value="">- Select Rating -</option>
+									<option value="G">G</option>
+									<option value="PG">PG</option>
+									<option value="PG-13">PG-13</option>
+									<option value="R">R</option>
+								</select>					
+							</div>	
+							<div class="col-md-6">
+							</div>
+							<!--@Html.LabelFor(m=>m.Rating)
+							@Html.DropDownListFor(m=>m.Rating,
+								new List<SelectItemList>
+								{
+									new SelectItemList { Text="G", Value="G" },
+									new SelectItemList { Text="PG-13", Value="PG-13" },
+									new SelectItemList { Text="R", Value="R" },
+									new SelectItemList { Text="NR", Value="NR" },
+								},
+								"- Select Rating -",
+								new { @class = "form-control"})-->
+						</div>
+						<div class="form-group">
+							<label for="edit-notes" class="col-md-2 control-label">
+								Notes:
+							</label>
+							
+							<div class="col-md-4">
+								<input type="textarea"
+									   class="form-control"
+									   id="edit-notes"
+									   placeholder="Notes" />
+							</div>	
+							
+							<div class="col-md-6">
+							</div>
+						</div>
+
+						<div class="form-group">
+							<div class="col-md-offset-2 col-md-1">
+								<input type="hidden" id="edit-dvd-id">
+								<button type="button"
+										id="edit-cancel-button"
+										class="btn btn-default"
+										onclick="hideEditForm()">
+									Cancel
+								</button>
+							</div>
+							<div class="col-md-2">
+								<button type="button"
+										id="edit-button"
+										class="btn btn-default">
+									Update Dvd
+								</button>
+							</div>
+						</div>
+
+					</form>
+				</div>
+
+				<div id="showDetailDiv" style="display: none">
+					<div>
+						
+						<div class="">
+							<input type="text"
+							class="form-control"
+							id="detail-title"
+							placeholder="Dvd Title"  />
+						</div>	
+						
+
+					</div>
+					<hr/>
+					<div >
+						<label >
+							Release Year:
+						</label>
+						
+						<div class="">
+							<input type="text"
+							class="form-control"
+							id="detail-realeaseYear"
+							placeholder="Realease Year" digits maxlength="4" />
+						</div>	
+						
+					</div>
+					<div >
+						<label for="detail-director" class=" control-label">
+							Director:
+						</label>
+						
+						<div class="">
+							<input type="text"
+							class="form-control"
+							id="detail-director"
+							placeholder="Director"  />
+						</div>	
+						
+
+					</div>
+					<div >
+						<label for="detail-rating" class=" control-label">
+							Rating:
+						</label>
+						
+						<div class="">
+							<input type="text"
+							class="form-control"
+							id="detail-rating"
+							placeholder="Rating"  />
+						</div>	
+						
+					</div>
+					<div >
+						<label for="detail-notes" class="control-label">
+							Notes:
+						</label>
+						
+						<div >
+							<input type="text"
+							class="form-control"
+							id="detail-notes"
+							placeholder="Notes"  />
+						</div>	
+						
+					</div>
+					<div >
+						<div class="col-md-offset-2 col-md-1">
+							<input type="hidden" id="detail-dvd-id">
+							<button type="button"
+									id="detail-cancel-button"
+									class="btn btn-default"
+									onclick="hideDetailForm()">
+								Back
+							</button>
+						</div>
+					</div>
+				</div>
+				
+				
+				<div id="createFormDiv" style="display: none">
+					<h2>Create Dvd</h2>
+					<hr>
+					<form class="form-horizontal" role="form" id="create-form">
+						<div class="form-group">
+							<label for="add-title" class="col-md-2 control-label">
+								Dvd Title:
+							</label>
+							
+							<div class="col-md-4">
+								<input type="text"
+									   class="form-control"
+									   id="add-title"
+									   placeholder="Dvd Title" required />
+							</div>	
+							
+							<div class="col-md-6">
+							</div>
+						</div>
+						
+						<div class="form-group">
+							<label for="add-realeaseYear" class="col-md-2 control-label">
+								Release Year:
+							</label>
+							
+							<div class="col-md-4">
+								<input type="text"
+									   class="form-control"
+									   id="add-realeaseYear"
+									   placeholder="Release Year" />
+							</div>	
+							
+							<div class="col-md-6">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="add-director" class="col-md-2 control-label">
+								Director:
+							</label>
+							
+							<div class="col-md-4">
+								<input type="text"
+									   class="form-control"
+									   id="add-director"
+									   placeholder="Director" />
+							</div>	
+							
+							<div class="col-md-6">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="Rating" class="col-md-2 control-label">Rating:</label>
+							<div class="col-md-4">
+								<select class="form-control" id="add-rating" name="Rating">
+									<option value="">- Select Rating -</option>
+									<option value="G">G</option>
+									<option value="PG">PG</option>
+									<option value="PG-13">PG-13</option>
+									<option value="R">R</option>
+								</select>					
+							</div>	
+							<div class="col-md-6">
+							</div>
+							<!--@Html.LabelFor(m=>m.Rating)
+							@Html.DropDownListFor(m=>m.Rating,
+								new List<SelectItemList>
+								{
+									new SelectItemList { Text="G", Value="G" },
+									new SelectItemList { Text="PG-13", Value="PG-13" },
+									new SelectItemList { Text="R", Value="R" },
+									new SelectItemList { Text="NR", Value="NR" },
+								},
+								"- Select Rating -",
+								new { @class = "form-control"})-->
+						</div>
+						<div class="form-group">
+							<label for="add-notes" class="col-md-2 control-label">
+								Notes:
+							</label>
+							
+							<div class="col-md-4">
+								<input type="textarea"
+									   class="form-control"
+									   id="add-notes"
+									   placeholder="Notes" />
+							</div>	
+							
+							<div class="col-md-6">
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-md-offset-2 col-md-1">
+								<input type="hidden" id="create-dvd-id">
+								<button type="button"
+										id="create-cancel-button"
+										class="btn btn-default"
+										onclick="hideCreateForm()">
+									Cancel
+								</button>
+							</div>
+							<div class="col-md-2">
+								<button type="button"
+										id="create-button"
+										class="btn btn-default">
+									Create Dvd
+								</button>
+							</div>
+						</div>
+						
+					</form>
+				</div>
+			</div>
+		</div>
+		
+        <!-- #5: Placed at the end of the document so the pages load faster -->
+        <script src="js/jquery-2.2.4.min.js"></script>
+        <script src="js/bootstrap.js"></script>
+        <script src="js/home.js"></script>
+    </body>
+</html>
